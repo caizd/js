@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+ </head>
+ <body>
+<style>
+
+#demo1{
+	margin-left:0px;
+	height:250px;
+	overflow:hidden;
+}
+#demo1 img {
+    height: 250px;
+	margin:0px 10px 0px 0px;
+}
+</style>
+<div id="scrollobj" style="white-space:nowrap;overflow:hidden;width:100%;" ontouchstart="touchstart(event);" ontouchend="touchend(event);">
+	<div id="demo1"><img src="http://ds.52yq.cn/dashangadmin/files/shanghuphoto/73_201608031522010.jpg"/><img src="http://ds.52yq.cn/dashangadmin/files/shanghuphoto/73_201608031522021.jpg"/><img src="http://ds.52yq.cn/dashangadmin/files/shanghuphoto/73_201608031522032.jpg"/>
+	</div>
+</div>
+  
+  <script>
+var imglenfth=demo1.getElementsByTagName("img").length ; 
+var i=0;
+var width =0;
+var maxWidth =0;
+var marginright=10;
+function scroll(obj,fuhao) 
+{
+	if(i>=imglenfth){
+		i=0;
+	}
+	if(fuhao=="+"){
+		width = demo1.getElementsByTagName("img")[i++].width+marginright +width;
+	}else{
+		width = width-demo1.getElementsByTagName("img")[i++].width-marginright;	
+	}
+	//demo1.scrollLeft=width;
+	demo1.style.marginLeft=-width+"px";
+	demo1.style.transition="margin-left 1s";
+	//当滚动条滚动了初始内容的宽度时滚动条回到最左
+	if (width > maxWidth){
+		width=0;
+		i=0;
+		demo1.style.transition="margin-left 0s";
+		demo1.style.marginLeft = 0+"px";
+		scroll(obj,"+");
+		//demo1.scrollLeft=0;
+	}
+}
+var mx=0;
+var myRoll;
+function touchstart(e){
+    mx=e.touches[0].clientX
+
+}
+function touchend(e){
+	var scrollobj = document.getElementById('scrollobj');
+    if(mx-e.changedTouches[0].clientX>10){
+        // 左移动 10 个像素以上
+        clearInterval(myRoll)
+        scroll(scrollobj,"+");
+        myRoll = setInterval("scroll(document.getElementById('scrollobj'),'+')", 3000)
+    }else if(mx-e.changedTouches[0].clientX<-10){
+        // 右移动
+        i=i-1;
+        if(i<0){
+        	return;
+        }
+        clearInterval(myRoll)
+        scroll(scrollobj,"-");
+        i=i-1;
+        myRoll = setInterval("scroll(document.getElementById('scrollobj'),'+')", 3000)
+    }else{
+        // 没动
+    }
+}
+window.onload = function() 
+{	changePhotos();
+	var scrollobj = document.getElementById('scrollobj');
+	var demo1 = document.getElementById('demo1');
+	for(var k =0;k<imglenfth;k++){
+		maxWidth = maxWidth + demo1.getElementsByTagName("img")[k].width+marginright;
+	}
+	var demoWidth = maxWidth;
+
+	while(demoWidth<scrollobj.offsetWidth*2){
+			demo1.innerHTML=demo1.innerHTML+demo1.innerHTML;
+			demoWidth = 0;
+			for(var j =0;j<demo1.getElementsByTagName("img").length;j++){
+				demoWidth = demoWidth + demo1.getElementsByTagName("img")[j].width+marginright;
+			}
+	}
+	myRoll = setInterval("scroll(scrollobj,'+')", 3000);
+	//pic.onmouseover = function() { clearInterval(myRoll) }
+	//pic.onmouseout = function() { setInterval(myRoll = setInterval("scroll(document.getElementById('scrollobj'))", 1)) }
+}
+  </script>
+ </body>
+</html>
